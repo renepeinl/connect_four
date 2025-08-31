@@ -11,14 +11,6 @@ import uuid
 import random
 
 class ConnectFour:
-
-    '''border_size = 20
-    font_size = 32        
-    text_color = (255, 255, 150)
-    bg_color = (0, 0, 128)
-    yellow_color = (255,220,50)
-    red_color = (220,0,0)
-    empty_color = (220,220,220)'''
     empty = 0
     red = 1
     yellow = 2
@@ -26,8 +18,6 @@ class ConnectFour:
     radius = 0
     space = 0
 
-    #num_columns = 7
-    #num_rows = 6
     running = True
 
     game_id  = ""
@@ -41,16 +31,13 @@ class ConnectFour:
     board = []
 
     game_result_file = ""
-    #base_url = "http://localhost:8000"
 
-        # pygame setup
     def __init__(self):
         pygame.init()
         GameConfig.load()
         self.screen = pygame.display.set_mode((GameConfig.width, GameConfig.height))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(GameConfig.font, GameConfig.font_size)
-        #self.player_pos = pygame.Vector2(self.screen.get_width() / 2, self.screen.get_height() / 2)
         pygame.font.init()
         pygame.display.set_caption('Four wins - VLM edition')
 
@@ -456,45 +443,44 @@ class ConnectFour:
       #self.board[1][4] = self.yellow
 
 
+    def handle_keyboard(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+
+            elif event.type == pygame.KEYDOWN:
+                logging.debug(f"Keydown detected: {event.key}")
+                if event.key in (pygame.K_1, pygame.K_a):
+                    self.add_stone(1)
+                elif event.key in (pygame.K_2, pygame.K_b):
+                    self.add_stone(2)
+                elif event.key in (pygame.K_3, pygame.K_c):
+                    self.add_stone(3)
+                elif event.key in (pygame.K_4, pygame.K_d):
+                    self.add_stone(4)
+                elif event.key in (pygame.K_5, pygame.K_e):
+                    self.add_stone(5)
+                elif event.key in (pygame.K_6, pygame.K_f):
+                    self.add_stone(6)
+                elif event.key in (pygame.K_7, pygame.K_g):
+                    self.add_stone(7)
         
     def run(self):
         self.render_environment(GameConfig.border_size, GameConfig.width, GameConfig.height)
         running = True
+        pygame.key.set_repeat() # this should prevent multiple keystrokes are recorded with a single press
         while running:
-            # poll for events
-            # pygame.QUIT event means the user clicked X to close your window
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-            # fill the screen with a color to wipe away anything from last frame
-
             self.render_stones()
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_1] or keys[pygame.K_a]:
-                self.add_stone(1)
-            if keys[pygame.K_2] or keys[pygame.K_b]:
-                self.add_stone(2)
-            if keys[pygame.K_3] or keys[pygame.K_c]:
-                self.add_stone(3)
-            if keys[pygame.K_4] or keys[pygame.K_d]:
-                self.add_stone(4)
-            if keys[pygame.K_5] or keys[pygame.K_e]:
-                self.add_stone(5)
-            if keys[pygame.K_6] or keys[pygame.K_f]:
-                self.add_stone(6)
-            if keys[pygame.K_7] or keys[pygame.K_g]:
-                self.add_stone(7)
+
+            self.handle_keyboard()
 
             # flip() the display to put your work on screen
             pygame.display.flip()
 
             # limits FPS to 10
-            # dt is delta time in seconds since last frame, used for framerate-
-            # independent physics.
+            # dt is delta time in seconds since last frame, used for framerate-independent physics.
             self.dt = self.clock.tick(10) / 1000
-            # there is still a bug for keyboard input, that sometimes, the key is not 
-            # noticed and at other times, the key is registered twice instead of once.
+
 
         pygame.quit()
 
