@@ -7,6 +7,7 @@ class GameRequestHandler(BaseHTTPRequestHandler):
     game_instance = None
 
     def do_POST(self):
+        """To start a new game, http POST is used, it returns the ID of the game"""
         parsed_url = urlparse(self.path)
         
         if parsed_url.path == '/four-wins':    
@@ -24,6 +25,7 @@ class GameRequestHandler(BaseHTTPRequestHandler):
                 self.send_error(500, str(e))
 
     def send_error(self, status, message):
+        """ Helper Method for sending error messages """
         self.send_response(status)
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -36,6 +38,7 @@ class GameRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def set_header(self, status, content_type):
+        """ Helper Method for sending positive responses """
         self.send_response(status)
         self.send_header('Content-type', content_type)
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -45,7 +48,8 @@ class GameRequestHandler(BaseHTTPRequestHandler):
         parsed_url = urlparse(self.path)
         
         if parsed_url.path == '/four-wins':
-            # Get the move parameter (e.g., ?move=A1)
+            # Get the move parameter (e.g., ?move=A1) 
+            # Currently the row is not evaluated, but it would be possible to return errors if the row does not match
             query_params = parse_qs(parsed_url.query)
             
             if 'move' in query_params:
@@ -76,7 +80,7 @@ class GameRequestHandler(BaseHTTPRequestHandler):
                 self.send_error(400, 'Missing move parameter')
         
         elif parsed_url.path.startswith('/screens'):
-            # endpoint to retrieve the screenshots
+            # endpoint to retrieve the screenshots, as well as the game state as jsonl file
             try:                       
                 image_path = '.' + parsed_url.path
                 content_type = "text/jsonl+json" if parsed_url.path.endswith("jsonl") else "image/png"

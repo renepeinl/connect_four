@@ -489,10 +489,12 @@ class ConnectFour:
             # flip() the display to put your work on screen
             pygame.display.flip()
 
-            # limits FPS to 60
+            # limits FPS to 10
             # dt is delta time in seconds since last frame, used for framerate-
             # independent physics.
             self.dt = self.clock.tick(10) / 1000
+            # there is still a bug for keyboard input, that sometimes, the key is not 
+            # noticed and at other times, the key is registered twice instead of once.
 
         pygame.quit()
 
@@ -507,22 +509,20 @@ class ConnectFour:
 
 
 def start_http_server(port=8000):
-    """Start the HTTP server in a separate thread"""
+    """Start the HTTP server in a separate thread so it doesn't block the game"""
     GameRequestHandler.game_instance = my_game
     server = HTTPServer(('localhost', port), GameRequestHandler)
     logging.info(f"Starting HTTP server on port {port}")
     
-    # Run server in a separate thread so it doesn't block pygame
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
     
     return server
 
-# Usage in your main game file:
+# main game entry point:
 if __name__ == "__main__":
-    my_game = Four_Wins()
+    my_game = ConnectFour()
 
-    #logging = logging.getlogging("four-wins")
     logging.basicConfig(filename='four-wins.log', level=logging.INFO)
     # Start your HTTP server
     http_server = start_http_server(8000)
