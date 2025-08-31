@@ -1,0 +1,15 @@
+{
+    "border_size": 20,
+    "font_size": 32,
+    "text_color": [255, 255, 150],
+    "bg_color": [0, 0, 128],
+    "yellow_color": [255, 220, 50],
+    "red_color": [220, 0, 0],
+    "empty_color": [220, 220, 220],
+    "base_url": "http://localhost:8000",
+    "num_columns": 7,
+    "num_rows": 6,
+    "width": 800,
+    "height": 720,
+    "font": "freesansbold.ttf"
+  }
